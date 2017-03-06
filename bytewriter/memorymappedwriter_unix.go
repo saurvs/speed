@@ -1,9 +1,11 @@
+// +build darwin dragonfly freebsd linux openbsd solaris netbsd
+
 package bytewriter
 
 import (
 	"fmt"
 	"os"
-	"path"
+	path "path/filepath"
 	"syscall"
 )
 

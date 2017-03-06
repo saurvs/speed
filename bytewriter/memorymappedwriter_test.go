@@ -2,7 +2,7 @@ package bytewriter
 
 import (
 	"os"
-	"path"
+	path "path/filepath"
 	"testing"
 )
 
@@ -45,6 +45,7 @@ func TestMemoryMappedWriter(t *testing.T) {
 	if data[5] != 'x' {
 		t.Error("Data Written in buffer not getting reflected in file")
 	}
+	reader.Close()
 
 	testUnmap(w, loc, t)
 }
