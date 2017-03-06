@@ -21,6 +21,7 @@ install:
   - set PATH=c:\go\bin;%GOPATH%\bin;%PATH%
   - go version
   - go env
+  - go get github.com/edsrzf/mmap-go
 
 build_script:
   - go test -v ./...
