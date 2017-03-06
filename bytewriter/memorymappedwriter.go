@@ -3,8 +3,8 @@ package bytewriter
 import (
 	"fmt"
 	"os"
-	"path"
-	"syscall"
+	path "path/filepath"
+	mmap "github.com/edsrzf/mmap-go"
 )
 
 // MemoryMappedWriter is a ByteBuffer that is also mapped into memory
@@ -30,7 +30,7 @@ func NewMemoryMappedWriter(loc string, size int) (*MemoryMappedWriter, error) {
 		return nil, err
 	}
 
-	f, err := os.OpenFile(loc, syscall.O_CREAT|syscall.O_RDWR|syscall.O_EXCL, 0644)
+	f, err := os.OpenFile(loc, os.O_CREATE|os.O_RDWR|os.O_EXCL, 0644)
 	if err != nil {
 		return nil, err
 	}
@@ -43,10 +43,12 @@ func NewMemoryMappedWriter(loc string, size int) (*MemoryMappedWriter, error) {
 		return nil, fmt.Errorf("Could not initialize %d bytes", size)
 	}
 
-	b, err := syscall.Mmap(int(f.Fd()), 0, size, syscall.PROT_READ|syscall.PROT_WRITE, syscall.MAP_SHARED)
+	b, err := mmap.MapRegion(f, size, mmap.RDWR, 0, 0)
 	if err != nil {
 		return nil, err
 	}
+
+	f.Close()
 
 	return &MemoryMappedWriter{
 		NewByteWriterSlice(b),
@@ -57,7 +59,7 @@ func NewMemoryMappedWriter(loc string, size int) (*MemoryMappedWriter, error) {
 
 // Unmap will manually delete the memory mapping of a mapped buffer
 func (b *MemoryMappedWriter) Unmap(removefile bool) error {
-	if err := syscall.Munmap(b.buffer); err != nil {
+	if err := b.buffer.Unmap(); err != nil {
 		return err
 	}
 

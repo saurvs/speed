@@ -3,7 +3,7 @@ package speed
 import (
 	"bufio"
 	"os"
-	"path"
+	path "path/filepath"
 	"regexp"
 
 	"github.com/Sirupsen/logrus"

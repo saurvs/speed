@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/binary"
 	"fmt"
+	mmap "github.com/edsrzf/mmap-go"
 )
 
 // assumes Little Endian, use _arch.go to set it to BigEndian for those archs
@@ -11,7 +12,7 @@ var byteOrder = binary.LittleEndian
 
 // ByteWriter is a simple wrapper over a byte slice that supports writing anywhere
 type ByteWriter struct {
-	buffer []byte
+	buffer mmap.MMap
 }
 
 // NewByteWriter creates a new ByteWriter of the specified size

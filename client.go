@@ -3,7 +3,7 @@ package speed
 import (
 	"errors"
 	"os"
-	"path"
+	path "path/filepath"
 	"strings"
 	"sync"
 	"time"
